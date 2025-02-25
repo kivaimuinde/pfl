@@ -1,0 +1,17 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>My Profile</h2>
+    <table class="table">
+        <tr><th>Email:</th><td>{{ user.email }}</td></tr>
+        <tr><th>First Name:</th><td>{{ user.first_name }}</td></tr>
+        <tr><th>Last Name:</th><td>{{ user.last_name }}</td></tr>
+        <tr><th>Phone:</th><td>{{ user.phone }}</td></tr>
+        <tr><th>Department:</th><td>{{ user.department }}</td></tr>
+        <tr><th>Role:</th><td>{{ user.role }}</td></tr>
+    </table>
+    <a href="{% url 'profile_edit' %}" class="btn btn-warning">Edit Profile</a>
+    <a href="{% url 'change_password' %}" class="btn btn-danger">Change Password</a>
+</div>
+{% endblock %}
