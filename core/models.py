@@ -1,0 +1,113 @@
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.db import models
+from django.utils.timezone import now
+from django.conf import settings
+from datetime import timedelta
+
+class BaseModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, 
+                                   on_delete=models.SET_NULL, null=True, blank=True, 
+                                   related_name="%(class)s_created")
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, 
+                                   on_delete=models.SET_NULL, null=True, blank=True, 
+                                   related_name="%(class)s_updated")
+
+    class Meta:
+        abstract = True
+
+
+class Department(BaseModel):
+    department = models.CharField(max_length=50, unique=True)
+    description=models.TextField()
+
+    def __str__(self):
+        return self.department
+
+
+class Plant(BaseModel):
+    plant = models.CharField(max_length=50, unique=True)
+    description=models.TextField()
+
+    def __str__(self):
+        return self.plant
+
+
+class Role(BaseModel):
+    role = models.CharField(max_length=255, unique=True)
+    description=models.TextField()
+
+    def __str__(self):
+        return self.role
+
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("The Email field must be set")
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(email, password, **extra_fields)
+
+
+class CustomUser(AbstractBaseUser, PermissionsMixin, BaseModel):
+    email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=50, blank=False, null=False)
+    last_name = models.CharField(max_length=50, null=False, blank=False)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    payroll_number = models.CharField(max_length=100, unique=True)
+    medical_cert_number = models.CharField(max_length=100, blank=True, null=True)
+    medical_cert_generation_date = models.DateField(blank=True, null=True)
+    medical_cert_expiry_date = models.DateField(blank=True, null=True)
+
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True)
+    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True)
+    plant = models.ForeignKey(Plant, on_delete=models.SET_NULL, null=True)
+
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name']
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}" if self.first_name and self.last_name else self.email
+
+
+class Casual(BaseModel):
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    payroll_number = models.CharField(max_length=100, unique=True)
+    medical_cert_number = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    medical_cert_generation_date = models.DateField(blank=True, null=True)
+    medical_cert_expiry_date = models.DateField(blank=True, null=True)
+    valid_cert = models.BooleanField(default=False)  # New field
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+    def check_certificate_validity(self):
+        """Checks if 6 months have elapsed since medical_cert_generation_date."""
+        if self.medical_cert_generation_date:
+            six_months_later = self.medical_cert_generation_date + timedelta(days=180)
+            return now().date() <= six_months_later
+        return False
+
+    def save(self, *args, **kwargs):
+        """Automatically updates valid_cert before saving."""
+        self.valid_cert = self.check_certificate_validity()
+        super().save(*args, **kwargs)
+        
+    def has_medical_cert(self):
+        return self.valid_cert
