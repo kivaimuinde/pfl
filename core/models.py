@@ -20,26 +20,26 @@ class BaseModel(models.Model):
 
 class Department(BaseModel):
     department = models.CharField(max_length=50, unique=True)
-    description=models.TextField()
+    description=models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return self.department
+        return self.department.title()
 
 
 class Plant(BaseModel):
     plant = models.CharField(max_length=50, unique=True)
-    description=models.TextField()
+    description=models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.plant
+        return self.plant.title()
 
 
 class Role(BaseModel):
     role = models.CharField(max_length=255, unique=True)
-    description=models.TextField()
+    description=models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return self.role
+        return self.role.title()
 
 
 class CustomUserManager(BaseUserManager):
@@ -79,8 +79,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, BaseModel):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
+    class Meta:
+        verbose_name='User'
+        verbose_name_plural="Users"
+
     def __str__(self):
-        return f"{self.first_name} {self.last_name}" if self.first_name and self.last_name else self.email
+        return f"{self.first_name.title()} {self.last_name.title()}" if self.first_name and self.last_name else self.email
+    
+    def get_full_name(self):
+        return f"{self.first_name.title()} {self.last_name.title()}" if self.first_name and self.last_name else self.email
     
     def assignments(self):
         """Returns active assignments for the current date"""
@@ -91,15 +98,21 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, BaseModel):
 class Casual(BaseModel):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=20, blank=True, null=True)
-    payroll_number = models.CharField(max_length=100, unique=True)
+    phone = models.CharField(max_length=20, blank=True, null=True, unique=True)
+    payroll_number = models.CharField(max_length=20, blank=True, null=True, unique=True)
     medical_cert_number = models.CharField(max_length=100, unique=True, blank=True, null=True)
     medical_cert_generation_date = models.DateField(blank=True, null=True)
     medical_cert_expiry_date = models.DateField(blank=True, null=True)
     valid_cert = models.BooleanField(default=False)  # New field
 
+    class Meta:
+        ordering=['first_name', 'last_name']
+
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.first_name.title()} {self.last_name.title()}"
+    
+    def get_full_name(self):
+        return f"{self.first_name.title()} {self.last_name.title()}"
 
     def check_certificate_validity(self):
         """Checks if 6 months have elapsed since medical_cert_generation_date."""
@@ -129,5 +142,5 @@ class UserAssignment(BaseModel):
     end_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.user} - {self.plant} ({self.start_date} to {self.end_date if self.end_date else 'Ongoing'})"
+        return f"{self.user.get_full_name()} - {self.plant.plant} ({self.start_date} to {self.end_date if self.end_date else 'Ongoing'})"
 
