@@ -70,7 +70,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, BaseModel):
 
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True)
     role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True)
-    plant = models.ForeignKey(Plant, on_delete=models.SET_NULL, null=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -82,6 +81,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, BaseModel):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}" if self.first_name and self.last_name else self.email
+    
+    def assignments(self):
+        """Returns active assignments for the current date"""
+        today = now().date()
+        return self.assignments.filter(start_date__lte=today, end_date__gte=today)  # Filtering active assignments
 
 
 class Casual(BaseModel):
@@ -108,6 +112,22 @@ class Casual(BaseModel):
         """Automatically updates valid_cert before saving."""
         self.valid_cert = self.check_certificate_validity()
         super().save(*args, **kwargs)
-        
+
     def has_medical_cert(self):
         return self.valid_cert
+    
+    def has_payroll(self):
+        return self.payroll_number is not None
+    
+    def has_payment(self):
+        return self.phone is not None
+    
+class UserAssignment(BaseModel):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="assignments")
+    plant = models.ForeignKey(Plant, on_delete=models.CASCADE, related_name="assignments")
+    start_date = models.DateField()
+    end_date = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.plant} ({self.start_date} to {self.end_date if self.end_date else 'Ongoing'})"
+
