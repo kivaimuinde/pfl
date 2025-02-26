@@ -33,7 +33,14 @@ class UserRegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "email", "password1", "password2"]
+        fields = ["first_name", "last_name", "email", "payroll", "password1", "password2"]
+
+    def clean_payroll(self):
+        """Validate that payroll number is unique before saving"""
+        payroll = self.cleaned_data.get("payroll")
+        if User.objects.filter(payroll=payroll).exists():
+            raise forms.ValidationError("This payroll number is already in use. Please enter a unique payroll number.")
+        return payroll
 
 ## user login form
 class UserLoginForm(AuthenticationForm):
