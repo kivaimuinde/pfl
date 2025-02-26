@@ -129,3 +129,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 AUTH_USER_MODEL = 'core.CustomUser'
+
+
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+
+# Place static files in a global 'static' directory at the project root
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# Directory where `collectstatic` will collect files for production
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Used when running `collectstatic`
+
+# Redirect after successful login
+LOGIN_REDIRECT_URL = 'core:home' 
+# Redirect after logout
+LOGOUT_REDIRECT_URL = 'core:login'
