@@ -7,9 +7,18 @@ from django.contrib.auth.forms import PasswordResetForm
 from ..forms.users import UserRegistrationForm,UserLoginForm,PasswordResetForm,UserPasswordChangeForm,UserProfileForm
 from .. models import CustomUser
 
+from django.contrib.auth.decorators import user_passes_test
+
+# method for redirecting users
+def redirect_authenticated_user(user):
+    return not user.is_authenticated  # Prevent access if user is logged in
+
+def home(request):
+    return render(request, 'base/home.html')
+
 
 ## user sign in / registration view
-
+@user_passes_test(redirect_authenticated_user, login_url='/')
 def register_user(request):
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
@@ -17,17 +26,17 @@ def register_user(request):
             user = form.save()
             login(request, user)
             messages.success(request, "Registration successful!")
-            return redirect("profile")
+            return redirect("core:profile")
         else:
             messages.error(request, "Please correct the errors below.")
     else:
         form = UserRegistrationForm()
     
-    return render(request, "users/register.html", {"form": form})
+    return render(request, "core/users/register.html", {"form": form})
 
 
 ## user login
-
+@user_passes_test(redirect_authenticated_user, login_url='/')
 def login_user(request):
     if request.method == "POST":
         form = UserLoginForm(request, data=request.POST)
@@ -38,13 +47,13 @@ def login_user(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, "Login successful!")
-                return redirect("profile")
+                return redirect("core:home")
             else:
                 messages.error(request, "Invalid credentials, please try again.")
     else:
         form = UserLoginForm()
     
-    return render(request, "users/login.html", {"form": form})
+    return render(request, "core/users/login.html", {"form": form})
 
 
 ## Logout function
@@ -52,7 +61,7 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     messages.success(request, "You have been logged out.")
-    return redirect("login")
+    return redirect("core:login")
 
 
 ## reset forgotten password without sending an email
@@ -66,13 +75,13 @@ def reset_password(request):
             user.set_password(new_password)
             user.save()
             messages.success(request, "Password reset successful! You can now log in.")
-            return redirect("login")
+            return redirect("core:login")
         else:
             messages.error(request, "Please correct the errors below.")
     else:
         form = PasswordResetForm()
 
-    return render(request, "users/password_reset.html", {"form": form})
+    return render(request, "core/users/password_reset.html", {"form": form})
 
 
 ## change passworg (for users who remember password and are logged in)
@@ -84,19 +93,19 @@ def change_password(request):
             user = form.save()
             update_session_auth_hash(request, user)  # Prevents logout after password change
             messages.success(request, "Password updated successfully!")
-            return redirect("profile")
+            return redirect("core:profile")
         else:
             messages.error(request, "Please correct the errors below.")
     else:
         form = UserPasswordChangeForm(request.user)
 
-    return render(request, "users/password_change.html", {"form": form})
+    return render(request, "core/users/password_change.html", {"form": form})
 
 
 ## View user profile
 @login_required
 def profile_view(request):
-    return render(request, "users/profile.html", {"user": request.user})
+    return render(request, "core/users/profile.html", {"user": request.user})
 
 
 # update user profile
@@ -108,10 +117,10 @@ def profile_update(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Profile updated successfully!")
-            return redirect("profile")
+            return redirect("core:profile")
         else:
             messages.error(request, "Please correct the errors below.")
     else:
         form = UserProfileForm(instance=user)
 
-    return render(request, "users/profile_edit.html", {"form": form})
+    return render(request, "core/users/profile_edit.html", {"form": form})
