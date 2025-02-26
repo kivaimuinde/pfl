@@ -11,20 +11,24 @@ User = get_user_model()
 class UserRegistrationForm(UserCreationForm):
     first_name = forms.CharField(
         max_length=50, 
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "First Name"})
+        widget=forms.TextInput(attrs={"class": "form-control border-info", "placeholder": "First Name"})
     )
     last_name = forms.CharField(
         max_length=50, 
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Last Name"})
+        widget=forms.TextInput(attrs={"class": "form-control border-info", "placeholder": "Last Name"})
+    )
+    payroll = forms.CharField(
+        max_length=50, 
+        widget=forms.TextInput(attrs={"class": "form-control border-info", "placeholder": "Payroll Number"})
     )
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={"class": "form-control", "placeholder": "Email"})
+        widget=forms.EmailInput(attrs={"class": "form-control border-info", "placeholder": "Email"})
     )
     password1 = forms.CharField(
-        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Password"})
+        widget=forms.PasswordInput(attrs={"class": "form-control border-info", "placeholder": "Password"})
     )
     password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Confirm Password"})
+        widget=forms.PasswordInput(attrs={"class": "form-control border-info", "placeholder": "Confirm Password"})
     )
 
     class Meta:

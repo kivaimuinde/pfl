@@ -49,13 +49,13 @@ class CustomUserForm(ModelForm):
 @admin.register(CustomUser)
 class CustomUserAdmin(AutoUserMixin, UserAdmin):
     ordering = ("email",)  # Set ordering to use 'email' instead of 'username'
-    list_display = ("email", "first_name", "last_name", "department", "role", "is_staff", "is_active")
+    list_display = ("email", "first_name", "last_name", "payroll", "department", "role", "is_staff", "is_active")
     search_fields = ("email", "first_name", "last_name", "department__department", "role__role")
     readonly_fields = ("last_login", "created_at", "updated_at", "created_by", "updated_by")
 
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        ("Personal Info", {"fields": ("first_name", "last_name", "phone", "payroll_number")}),
+        ("Personal Info", {"fields": ("first_name", "last_name", "phone", "payroll")}),
         ("Employment", {"fields": ("department", "role")}),
         ("Medical Info", {"fields": ("medical_cert_number", "medical_cert_generation_date", "medical_cert_expiry_date")}),
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
@@ -72,11 +72,11 @@ class CustomUserAdmin(AutoUserMixin, UserAdmin):
 
 @admin.register(Casual)
 class CasualAdmin(BaseAdmin):
-    list_display = ("first_name", "last_name", "phone", "payroll_number", "valid_cert") + BaseAdmin.list_display
-    search_fields = ("first_name", "last_name", "phone", "payroll_number", "medical_cert_number")
+    list_display = ("first_name", "last_name", "phone", "payroll", "valid_cert") + BaseAdmin.list_display
+    search_fields = ("first_name", "last_name", "phone", "payroll", "medical_cert_number")
     list_filter = ("valid_cert",)
     fieldsets = (
-        (None, {"fields": ("first_name", "last_name", "phone", "payroll_number")}),
+        (None, {"fields": ("first_name", "last_name", "phone", "payroll")}),
         ("Medical Info", {"fields": ("medical_cert_number", "medical_cert_generation_date", "medical_cert_expiry_date", "valid_cert")}),
         ("Metadata", {"fields": ("created_at", "updated_at", "created_by", "updated_by")}),
     )
