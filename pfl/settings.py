@@ -52,6 +52,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+     # Other custom middleware
+    'core.middleware.AutoLogoutMiddleware',
 ]
 
 ROOT_URLCONF = 'pfl.urls'
@@ -146,3 +149,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Used when running `collec
 LOGIN_REDIRECT_URL = 'core:home' 
 # Redirect after logout
 LOGOUT_REDIRECT_URL = 'core:login'
+
+# Auto-logout after 30 minutes (1800 seconds) of inactivity
+SESSION_COOKIE_AGE = 60  # Session lasts 30 minutes
+SESSION_SAVE_EVERY_REQUEST = True  # Refresh session expiry on each request
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Log out when the browser is closed
