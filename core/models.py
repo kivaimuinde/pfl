@@ -34,12 +34,12 @@ class Plant(BaseModel):
         return self.plant.title()
 
 
-class Role(BaseModel):
-    role = models.CharField(max_length=255, unique=True)
+class Job(BaseModel):
+    job = models.CharField(max_length=255, unique=True)
     description=models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return self.role.title()
+        return self.job.title()
 
 
 class CustomUserManager(BaseUserManager):
@@ -69,7 +69,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, BaseModel):
     medical_cert_expiry_date = models.DateField(blank=True, null=True)
 
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True)
-    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True)
+    job = models.ForeignKey(Job, on_delete=models.SET_NULL, null=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
