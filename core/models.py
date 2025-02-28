@@ -57,13 +57,21 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(email, password, **extra_fields)
 
-
 class CustomUser(AbstractBaseUser, PermissionsMixin, BaseModel):
+    ROLE_CHOICES = [
+        ('super_admin', 'Super Admin'),
+        ('admin', 'Admin'),
+        ('manager', 'Manager'),
+        ('hr', 'HR'),
+        ('finance', 'Finance'),
+        ('supervisor', 'Supervisor'),
+    ]
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=50, blank=False, null=False)
     last_name = models.CharField(max_length=50, null=False, blank=False)
     phone = models.CharField(max_length=20, blank=True, null=True)
     payroll = models.CharField(max_length=10, unique=True)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='supervisor')
     medical_cert_number = models.CharField(max_length=100, blank=True, null=True)
     medical_cert_generation_date = models.DateField(blank=True, null=True)
     medical_cert_expiry_date = models.DateField(blank=True, null=True)
