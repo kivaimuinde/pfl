@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.timezone import now
 from django.contrib.auth.admin import UserAdmin
 from django.forms import ModelForm
-from .models import Department, Plant, Role, CustomUser, Casual, UserAssignment
+from .models import Department, Plant, Job, CustomUser, Casual, UserAssignment
 
 
 class AutoUserMixin:
@@ -33,10 +33,10 @@ class PlantAdmin(BaseAdmin):
     search_fields = ("plant", )
 
 
-@admin.register(Role)
-class RoleAdmin(BaseAdmin):
-    list_display = ("role", "description") + BaseAdmin.list_display
-    search_fields = ("role", "description")
+@admin.register(Job)
+class JoBAdmin(BaseAdmin):
+    list_display = ("job", "description") + BaseAdmin.list_display
+    search_fields = ("job", "description")
 
 
 class CustomUserForm(ModelForm):
@@ -49,14 +49,14 @@ class CustomUserForm(ModelForm):
 @admin.register(CustomUser)
 class CustomUserAdmin(AutoUserMixin, UserAdmin):
     ordering = ("email",)  # Set ordering to use 'email' instead of 'username'
-    list_display = ("email", "first_name", "last_name", "payroll", "department", "role", "is_staff", "is_active")
-    search_fields = ("email", "first_name", "last_name", "department__department", "role__role")
+    list_display = ("email", "first_name", "last_name", "payroll", "department", "job", "is_staff", "is_active")
+    search_fields = ("email", "first_name", "last_name", "department__department", "job__job")
     readonly_fields = ("last_login", "created_at", "updated_at", "created_by", "updated_by")
 
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         ("Personal Info", {"fields": ("first_name", "last_name", "phone", "payroll")}),
-        ("Employment", {"fields": ("department", "role")}),
+        ("Employment", {"fields": ("department", "job")}),
         ("Medical Info", {"fields": ("medical_cert_number", "medical_cert_generation_date", "medical_cert_expiry_date")}),
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
         ("Important Dates", {"fields": ("last_login", "created_at", "updated_at", "created_by", "updated_by")}),
