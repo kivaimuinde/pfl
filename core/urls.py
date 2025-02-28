@@ -15,4 +15,5 @@ urlpatterns = [
     path("change-password/", users.change_password, name="change_password"),
     path("profile/", users.profile_view, name="profile"),
     path("profile/edit/", users.profile_update, name="profile_edit"),
+    path("loggedout/reason/inactive/", users.logout_inactive_user, name="logout_inactive_user"),
 ]

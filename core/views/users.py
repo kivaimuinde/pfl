@@ -61,8 +61,14 @@ def login_user(request):
 @login_required
 def logout_user(request):
     logout(request)
-    messages.success(request, "You have been logged out.")
+    request.session.flush()
+    # messages.success(request, "You have been logged out.")
     return redirect("core:login")
+
+def logout_inactive_user(request):
+    logout(request)
+    request.session.flush()
+    return render(request, 'core/users/inactive_user.html')
 
 
 ## reset forgotten password without sending an email
