@@ -115,7 +115,7 @@
             clearTimeout(timeout);
             timeout = setTimeout(() => {
                 alert("You will be logged out due to inactivity.");
-                window.location.href = "{% url 'core:logout' %}";  // Redirect to logout URL
+                window.location.href = "{% url 'core:logout_inactive_user' %}";  // Redirect to logout_inactive_user url
             }, 1 * 60 * 1000);  // 29 minutes (1 minute before logout)
         }
         
