@@ -146,7 +146,7 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Used when running `collectstatic`
 
 # Redirect after successful login
-LOGIN_REDIRECT_URL = 'core:home' 
+LOGIN_REDIRECT_URL = 'core:login' 
 # Redirect after logout
 LOGOUT_REDIRECT_URL = 'core:login'
 
