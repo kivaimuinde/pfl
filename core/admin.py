@@ -34,7 +34,7 @@ class PlantAdmin(BaseAdmin):
 
 
 @admin.register(Job)
-class JoBAdmin(BaseAdmin):
+class JobAdmin(BaseAdmin):
     list_display = ("job", "description") + BaseAdmin.list_display
     search_fields = ("job", "description")
 
@@ -52,11 +52,12 @@ class CustomUserAdmin(AutoUserMixin, UserAdmin):
     list_display = ("email", "first_name", "last_name", "payroll", "department", "job", "is_staff", "is_active")
     search_fields = ("email", "first_name", "last_name", "department__department", "job__job")
     readonly_fields = ("last_login", "created_at", "updated_at", "created_by", "updated_by")
+    list_filter=('role','job')
 
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         ("Personal Info", {"fields": ("first_name", "last_name", "phone", "payroll")}),
-        ("Employment", {"fields": ("department", "job")}),
+        ("Employment", {"fields": ("department", "job","role")}),
         ("Medical Info", {"fields": ("medical_cert_number", "medical_cert_generation_date", "medical_cert_expiry_date")}),
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
         ("Important Dates", {"fields": ("last_login", "created_at", "updated_at", "created_by", "updated_by")}),
