@@ -6,6 +6,7 @@ app_name='core'
 urlpatterns = [
 
     path("", users.home, name="home"),
+    path("dashboard/", users.dashboard, name="dashboard"),
 
     # Users URLs
     path("register/", users.register_user, name="register"),
