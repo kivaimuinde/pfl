@@ -150,7 +150,7 @@ LOGIN_REDIRECT_URL = 'core:login'
 # Redirect after logout
 LOGOUT_REDIRECT_URL = 'core:login'
 
-# Auto-logout after 30 minutes (1800 seconds) of inactivity
-SESSION_COOKIE_AGE = 60  # Session lasts 30 minutes
+# Auto-logout after 15 minutes (900 seconds) of inactivity
+SESSION_COOKIE_AGE = 900  # Session lasts 15 minutes
 SESSION_SAVE_EVERY_REQUEST = True  # Refresh session expiry on each request
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Log out when the browser is closed
