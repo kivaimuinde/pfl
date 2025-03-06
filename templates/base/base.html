@@ -34,6 +34,13 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    {%if user.is_authenticated and user.is_staff%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin:index' %}">
+                            <i class="fa-solid fa-gear"></i> Admin Panel
+                        </a>
+                    </li>
+                    {% endif %}
                     {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'core:profile' %}">
@@ -85,7 +92,7 @@
     
     <!-- Footer -->
     <footer class="bg-dark text-white text-center py-3 mt-4">
-        <p>&copy; {% now 'Y' %} PFL | All Rights Reserved</p>
+        <p>&copy; {% now 'F Y' %} PFL | All Rights Reserved</p>
     </footer>
     
     <!-- jQuery -->
