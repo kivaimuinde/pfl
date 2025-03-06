@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
+
+from django.core.exceptions import ValidationError
 
 User = get_user_model()
 
@@ -35,12 +35,29 @@ class UserRegistrationForm(UserCreationForm):
         model = User
         fields = ["first_name", "last_name", "email", "payroll", "password1", "password2"]
 
+    def clean_email(self):
+            email = self.cleaned_data.get('email')
+            if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+                raise ValidationError("A user with this email already exists.")
+            return email
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+        if phone and User.objects.filter(phone=phone).exclude(pk=self.instance.pk).exists():
+            raise ValidationError("A user with this phone number already exists.")
+        return phone
+
     def clean_payroll(self):
-        """Validate that payroll number is unique before saving"""
-        payroll = self.cleaned_data.get("payroll")
-        if User.objects.filter(payroll=payroll).exists():
-            raise forms.ValidationError("This payroll number is already in use. Please enter a unique payroll number.")
+        payroll = self.cleaned_data.get('payroll')
+        if payroll and User.objects.filter(payroll=payroll).exclude(pk=self.instance.pk).exists():
+            raise ValidationError("A user with this payroll number already exists.")
         return payroll
+
+    def clean_medical_cert_number(self):
+        medical_cert_number = self.cleaned_data.get('medical_cert_number')
+        if medical_cert_number and User.objects.filter(medical_cert_number=medical_cert_number).exclude(pk=self.instance.pk).exists():
+            raise ValidationError("A user with this medical certificate number already exists.")
+        return medical_cert_number
 
 ## user login form
 class UserLoginForm(AuthenticationForm):
@@ -109,7 +126,17 @@ class UserProfileForm(forms.ModelForm):
         model = User
         fields = ["first_name", "last_name", "email", "phone"]
 
+    def clean_email(self):
+            email = self.cleaned_data.get('email')
+            if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+                raise ValidationError("A user with this email already exists.")
+            return email
 
+    def clean_phone(self):
+            phone = self.cleaned_data.get('phone')
+            if phone and User.objects.filter(phone=phone).exclude(pk=self.instance.pk).exists():
+                raise ValidationError("A user with this phone number already exists.")
+            return phone
 
 
 class CustomUserFullProfileForm(forms.ModelForm):
@@ -135,3 +162,27 @@ class CustomUserFullProfileForm(forms.ModelForm):
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_staff': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
+
+        def clean_email(self):
+            email = self.cleaned_data.get('email')
+            if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+                raise ValidationError("A user with this email already exists.")
+            return email
+
+        def clean_phone(self):
+            phone = self.cleaned_data.get('phone')
+            if phone and User.objects.filter(phone=phone).exclude(pk=self.instance.pk).exists():
+                raise ValidationError("A user with this phone number already exists.")
+            return phone
+
+        def clean_payroll(self):
+            payroll = self.cleaned_data.get('payroll')
+            if payroll and User.objects.filter(payroll=payroll).exclude(pk=self.instance.pk).exists():
+                raise ValidationError("A user with this payroll number already exists.")
+            return payroll
+
+        def clean_medical_cert_number(self):
+            medical_cert_number = self.cleaned_data.get('medical_cert_number')
+            if medical_cert_number and User.objects.filter(medical_cert_number=medical_cert_number).exclude(pk=self.instance.pk).exists():
+                raise ValidationError("A user with this medical certificate number already exists.")
+            return medical_cert_number

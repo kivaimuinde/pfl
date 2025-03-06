@@ -19,33 +19,33 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for user in users %}
+                    {% for u in users %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>
-                            <a href="{% url 'core:user_detail' user.id %}" class="text-decoration-none">
-                                {{ user.get_full_name }}
+                            <a href="{% url 'core:user_detail' u.id %}" class="text-decoration-none">
+                                {{ u.get_full_name }}
                             </a>
                         </td>
-                        <td class="d-none d-md-table-cell">{{ user.email }}</td>
-                        <td>{{ user.get_role_display }}</td>
-                        <td class="d-none d-md-table-cell">{{ user.department.department|default:"-" | title }}</td>
-                        <td class="d-none d-md-table-cell">{{ user.phone|default:"-" }}</td>
+                        <td class="d-none d-md-table-cell">{{ u.email }}</td>
+                        <td>{{ u.get_role_display }}</td>
+                        <td class="d-none d-md-table-cell">{{ u.department.department|default:"-" | title }}</td>
+                        <td class="d-none d-md-table-cell">{{ u.phone|default:"-" }}</td>
                         <td>
                             <div class="d-flex gap-2">
-                                {% if user.id != request.user.id %}
-                                <a href="{% url 'core:edit_user_profile' user.id %}" class="btn btn-sm btn-primary">
+                                {% if u.id != request.user.id %}
+                                <a href="{% url 'core:edit_user_profile' u.id %}" class="btn btn-sm btn-primary">
                                     <i class="bi bi-pencil-square"></i> 
                                     <span class="d-none d-sm-inline">Edit</span>
                                 </a>
-                                {% if user.is_active %}
-                                <a href="{% url 'core:deactivate_user' user.id %}" class="btn btn-sm btn-danger"
+                                {% if u.is_active %}
+                                <a href="{% url 'core:deactivate_user' u.id %}" class="btn btn-sm btn-danger"
                                 onclick="return confirm('Are you sure you want to deactivate this user?');">
                                 <i class="bi bi-person-x"></i> 
                                 <span class="d-none d-sm-inline">Deactivate</span>
                             </a>
                             {% else %}
-                            <a href="{% url 'core:activate_user' user.id %}" class="btn btn-sm btn-success"
+                            <a href="{% url 'core:activate_user' u.id %}" class="btn btn-sm btn-success"
                             onclick="return confirm('Are you sure you want to activate this user?');">
                             <i class="bi bi-person-check"></i>
                             <span class="d-none d-sm-inline">Activate</span>

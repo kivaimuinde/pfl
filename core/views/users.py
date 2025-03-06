@@ -176,21 +176,21 @@ def activate_user(request, user_id):
 @login_required
 def user_detail(request, user_id):
     user = get_object_or_404(CustomUser, id=user_id)
-    return render(request, 'core/users/user_detail.html', {'user': user})
+    return render(request, 'core/users/user_detail.html', {'u': user})
 
 
 ## function called by high level users
 @login_required
 def edit_user_profile(request, user_id):
-    user = get_object_or_404(CustomUser, id=user_id)
+    u = get_object_or_404(CustomUser, id=user_id)
     
     if request.method == 'POST':
-        form = CustomUserFullProfileForm(request.POST, instance=user)
+        form = CustomUserFullProfileForm(request.POST, instance=u)
         if form.is_valid():
             form.save()
             messages.success(request, "User details updated successfully.")
-            return redirect('core:user_detail', user_id=user.id)  # Redirect to user detail page
+            return redirect('core:user_detail', user_id=u.id)  # Redirect to user detail page
     else:
-        form = CustomUserFullProfileForm(instance=user)
+        form = CustomUserFullProfileForm(instance=u)
 
-    return render(request, 'core/users/edit_full_profile.html', {'form': form, 'user': user})
+    return render(request, 'core/users/edit_full_profile.html', {'form': form, 'user': u})
