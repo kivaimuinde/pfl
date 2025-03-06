@@ -17,4 +17,13 @@ urlpatterns = [
     path("profile/", users.profile_view, name="profile"),
     path("profile/edit/", users.profile_update, name="profile_edit"),
     path("loggedout/reason/inactive/", users.logout_inactive_user, name="logout_inactive_user"),
+
+
+
+    path("profile/all/", users.user_list, name="user_list"),
+    path('profiles/<int:user_id>/details', users.user_detail, name='user_detail'),
+    path('users/<int:user_id>/edit/profile/', users.edit_user_profile, name='edit_user_profile'),
+
+    path("users/action/<int:user_id>/deactivate", users.deactivate_user, name="deactivate_user"),
+    path("users/action/<int:user_id>/activate", users.activate_user, name="activate_user"),
 ]

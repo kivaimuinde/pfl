@@ -1,4 +1,4 @@
-{% extends 'base/base_guest.html' %}
+{% extends 'base/base.html' %}
 
 {% block content %}
 <div class="container mt-5">
@@ -11,7 +11,7 @@
                 <span class="d-none d-sm-inline">Edit Profile</span>
             </a>
             <a href="{% url 'core:change_password' %}" class="btn btn-danger">
-                <i class="bi bi-key-fill fs-5"></i><i class="fa-solid fa-gear"></i> 
+                <i class="bi bi-person-lock fs-5"></i>
                 <span class="d-none d-sm-inline">Change Password</span>
             </a>
         </div>
@@ -20,11 +20,10 @@
     <!-- Profile Information Table -->
     <table class="table">
         <tr><th>Email:</th><td>{{ user.email }}</td></tr>
-        <tr><th>First Name:</th><td>{{ user.first_name }}</td></tr>
-        <tr><th>Last Name:</th><td>{{ user.last_name }}</td></tr>
+        <tr><th>Full Name:</th><td>{{ user.get_full_name | title }}</td></tr>
         <tr><th>Phone:</th><td>{{ user.phone }}</td></tr>
-        <tr><th>Department:</th><td>{{ user.department }}</td></tr>
-        <tr><th>Role:</th><td>{{ user.role }}</td></tr>
+        <tr><th>Department:</th><td>{{ user.department | title}}</td></tr>
+        <tr><th>Role:</th><td>{{ user.role | upper }}</td></tr>
     </table>
 </div>
 {% endblock %}

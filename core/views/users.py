@@ -5,7 +5,12 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.utils.timezone import now
 from django.contrib.auth.forms import PasswordResetForm
-from ..forms.users import UserRegistrationForm,UserLoginForm,PasswordResetForm,UserPasswordChangeForm,UserProfileForm
+from ..forms.users import (
+    UserRegistrationForm,UserLoginForm,PasswordResetForm,
+    UserPasswordChangeForm,UserProfileForm, CustomUserFullProfileForm
+)
+from urllib.parse import urlparse
+
 from .. models import CustomUser
 
 from django.contrib.auth.decorators import user_passes_test
@@ -42,6 +47,8 @@ def register_user(request):
 ## user login
 @user_passes_test(redirect_authenticated_user, login_url='/')
 def login_user(request):
+    next_url = request.GET.get("next", "core:home")  # Get 'next' parameter or default to home
+
     if request.method == "POST":
         form = UserLoginForm(request, data=request.POST)
         if form.is_valid():
@@ -51,13 +58,17 @@ def login_user(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, "Login successful!")
-                return redirect("core:home")
+
+                # Ensure next_url is safe (prevents open redirect vulnerability)
+                if urlparse(next_url).netloc == "":
+                    return redirect(next_url)
+                return redirect("core:home")  # Fallback to home if next_url is unsafe
             else:
                 messages.error(request, "Invalid credentials, please try again.")
     else:
         form = UserLoginForm()
-    
-    return render(request, "core/users/login.html", {"form": form})
+
+    return render(request, "core/users/login.html", {"form": form, "next": next_url})
 
 
 ## Logout function
@@ -68,6 +79,7 @@ def logout_user(request):
     # messages.success(request, "You have been logged out.")
     return redirect("core:login")
 
+# logout function
 def logout_inactive_user(request):
     logout(request)
     request.session.flush()
@@ -134,3 +146,51 @@ def profile_update(request):
         form = UserProfileForm(instance=user)
 
     return render(request, "core/users/profile_edit.html", {"form": form})
+
+
+#list all users
+@login_required
+def user_list(request):
+    users = CustomUser.objects.all()  # Fetch all users
+    return render(request, 'core/users/user_list.html', {'users': users})
+
+
+@login_required
+def deactivate_user(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    
+    user.is_active = False
+    user.save()
+    messages.success(request, f"{user.get_full_name()} has been deactivated.")
+    return redirect(request.META.get('HTTP_REFERER', 'core:user_list'))
+
+@login_required
+def activate_user(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    
+    user.is_active = True
+    user.save()
+    messages.success(request, f"{user.get_full_name()} has been activated.")
+    return redirect(request.META.get('HTTP_REFERER', 'core:user_list'))
+
+@login_required
+def user_detail(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    return render(request, 'core/users/user_detail.html', {'user': user})
+
+
+## function called by high level users
+@login_required
+def edit_user_profile(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    
+    if request.method == 'POST':
+        form = CustomUserFullProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "User details updated successfully.")
+            return redirect('core:user_detail', user_id=user.id)  # Redirect to user detail page
+    else:
+        form = CustomUserFullProfileForm(instance=user)
+
+    return render(request, 'core/users/edit_full_profile.html', {'form': form, 'user': user})

@@ -6,6 +6,6 @@
         <h4 class="alert-heading">Session Expired</h4>
         <p>You have been logged out due to inactivity.</p>
     </div>
-    <a href="{% url 'core:login' %}" class="btn btn-primary">Login Again</a>
+    <a href="{% url 'core:login'%}?next={{ request.META.HTTP_REFERER }} " class="btn btn-primary">Login Again</a>
 </div>
 {% endblock %}
