@@ -17,6 +17,9 @@ def redirect_authenticated_user(user):
 def home(request):
     return render(request, 'base/home.html')
 
+def dashboard(request):
+    return render(request, 'base/dashboard.html')
+
 
 ## user sign in / registration view
 @user_passes_test(redirect_authenticated_user, login_url='/')
