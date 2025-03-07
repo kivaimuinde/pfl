@@ -54,7 +54,7 @@
                     </tr>
                     <tr>
                         <th scope="row">Department</th>
-                        <td>{{ u.department.name|default:"-" }}</td>
+                        <td>{{ u.department.department|default:"-" | title }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Phone</th>
@@ -70,7 +70,7 @@
                     </tr>
                     <tr>
                         <th scope="row">Active</th>
-                        <td>{{ u.is_active|yesno:"Yes,No" }}</td>
+                        <td class="{% if u.is_active %} text text-success{% else %} text-danger {% endif %}">{{ u.is_active|yesno:"Yes,No" }}</td>
                     </tr>
                 </tbody>
             </table>
