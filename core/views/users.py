@@ -175,8 +175,8 @@ def activate_user(request, user_id):
 
 @login_required
 def user_detail(request, user_id):
-    user = get_object_or_404(CustomUser, id=user_id)
-    return render(request, 'core/users/user_detail.html', {'u': user})
+    u = get_object_or_404(CustomUser, id=user_id)
+    return render(request, 'core/users/user_detail.html', {'u': u})
 
 
 ## function called by high level users
