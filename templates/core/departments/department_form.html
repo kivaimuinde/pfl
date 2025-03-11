@@ -1,0 +1,45 @@
+{% extends "base/base.html" %}
+{% block title %}
+{% if form.instance.pk %}Edit Department{% else %}New Department{% endif %}
+{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">{% if form.instance.pk %}Edit Department{% else %}New Department{% endif %}</h2>
+
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+
+        <!-- Department Name Field -->
+        <div class="mb-3">
+            <label for="{{ form.department.id_for_label }}" class="form-label">Department Name</label>
+            {{ form.department }}
+            {% if form.department.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.department.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Description Field -->
+        <div class="mb-3">
+            <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.description.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Submit & Cancel Buttons -->
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-circle"></i> <span class="d-none d-sm-inline">Save</span>
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="window.history.back();">
+                <i class="bi bi-arrow-left"></i> <span class="d-none d-sm-inline">Cancel</span>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

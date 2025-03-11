@@ -17,7 +17,7 @@
             </a>
             
             <!-- Activate/Deactivate Button (Hide for currently logged-in user) -->
-            {% if u.id != request.u.id %}
+            {% if u.id != request.user.id %}
             {% if u.is_active %}
             <a href="{% url 'core:deactivate_user' u.id %}" class="btn btn-danger btn-sm"
             onclick="return confirm('Are you sure you want to deactivate this user?');">

@@ -1,0 +1,63 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+Departments
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Departments</h2>
+        <a href="{% url 'core:department_create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> 
+            <span class="d-none d-sm-inline">Add New Department</span>
+        </a>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Department Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for department in departments %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        <a href="{% url 'core:department_detail' department.pk %}" class="text-decoration-none">
+                            {{ department.department }}
+                        </a>
+                    </td>
+                    <td>
+                        {% if department.description|length > 20 %}
+                        {{ department.description| title | slice:":20"  }}...
+                        {% else %}
+                        <i>{{ department.description| title |default:"No description available" }}</i>
+                        {% endif %}
+                    </td>
+                    <td class="d-flex gap-2">
+                        <a href="{% url 'core:department_update' department.pk %}" class="btn btn-sm btn-warning">
+                            <i class="bi bi-pencil"></i> 
+                            <span class="d-none d-sm-inline">Edit</span>
+                        </a>
+                        <a href="{% url 'core:department_delete' department.pk %}" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i> 
+                            <span class="d-none d-sm-inline">Delete</span>
+                        </a>
+                    </td>                   
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">No departments found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

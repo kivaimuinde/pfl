@@ -1,0 +1,40 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+{{ department.department }} Department
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Title and Buttons on the Same Row -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">{{ department.department | title }} Department</h2>
+        <div>
+            <a href="#" class="btn btn-secondary" onclick="window.history.back();">
+                <i class="bi bi-arrow-left"></i> <span class="d-none d-sm-inline">Back</span>
+            </a>
+            <a href="{% url 'core:department_update' department.pk %}" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> <span class="d-none d-sm-inline">Edit</span>
+            </a>
+            
+            <a href="{% url 'core:department_delete' department.pk %}" class="btn btn-danger">
+                <i class="bi bi-trash"></i> <span class="d-none d-sm-inline">Delete</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Department Description -->
+    <p>
+        {% if department.description %}
+            {{ department.description | title }}
+        {% else %}
+            <span class="text-muted fst-italic">No description available</span>
+        {% endif %}
+    </p>
+
+    <!-- Back to List Button -->
+    <a href="{% url 'core:department_list' %}" class="btn btn-primary">
+        <i class="bi bi-arrow-left"></i> <span class="d-none d-sm-inline">Back to List</span>
+    </a>
+</div>
+{% endblock %}

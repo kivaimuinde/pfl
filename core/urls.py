@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import users
+from .views import users, departments
 
 app_name='core'
 
@@ -26,4 +26,14 @@ urlpatterns = [
 
     path("users/action/<int:user_id>/deactivate", users.deactivate_user, name="deactivate_user"),
     path("users/action/<int:user_id>/activate", users.activate_user, name="activate_user"),
+
+
+     # Department URLs
+
+    
+    path('departments/', departments.department_list, name='department_list'),
+    path('departments/<int:pk>/details', departments.department_detail, name='department_detail'),
+    path('departments/add/new/', departments.department_create, name='department_create'),
+    path('departments/<int:pk>/details/edit/', departments.department_update, name='department_update'),
+    path('departments/<int:pk>/delete/', departments.department_delete, name='department_delete'),
 ]
