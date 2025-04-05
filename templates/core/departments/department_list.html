@@ -20,7 +20,8 @@ Departments
                 <tr>
                     <th>#</th>
                     <th>Department Name</th>
-                    <th>Description</th>
+                    <th>Manager</th>
+                    <span class="d-none d-sm-inline"><th>Description</th></span>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -37,16 +38,18 @@ Departments
                         {% if department.manager %}
                         {{ department.manager| title  }}
                         {% else %}
-                        <i>{{ department.description| title |default:"No manager Assigned" }}</i>
+                        <i>No manager Assigned</i>
                         {% endif %}
                     </td>
-                    <td>
-                        {% if department.description|length > 20 %}
-                        {{ department.description| title | slice:":20"  }}...
-                        {% else %}
-                        <i>{{ department.description| title |default:"No description available" }}</i>
-                        {% endif %}
-                    </td>
+                    <span class="d-none d-sm-inline">
+                        <td>
+                            {% if department.description|length > 20 %}
+                            {{ department.description| title | slice:":20"  }}...
+                            {% else %}
+                            <i>{{ department.description| title |default:"No description available" }}</i>
+                            {% endif %}
+                        </td>
+                    </span>
                     <td class="d-flex gap-2">
                         <a href="{% url 'core:department_update' department.pk %}" class="btn btn-sm btn-warning">
                             <i class="bi bi-pencil"></i> 
