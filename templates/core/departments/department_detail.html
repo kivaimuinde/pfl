@@ -23,6 +23,15 @@
         </div>
     </div>
 
+     <!-- Department Manager -->
+     <p>
+        {% if department.manager %}
+            {{ department.manager | title }}
+        {% else %}
+            <span class="text-muted fst-italic">No manager record available</span>
+        {% endif %}
+    </p>
+
     <!-- Department Description -->
     <p>
         {% if department.description %}

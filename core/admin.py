@@ -23,7 +23,7 @@ class BaseAdmin(AutoUserMixin, admin.ModelAdmin):
 
 @admin.register(Department)
 class DepartmentAdmin(BaseAdmin):
-    list_display = ("department", "description") + BaseAdmin.list_display
+    list_display = ("department","manager", "description") + BaseAdmin.list_display
     search_fields = ("department", )
 
 

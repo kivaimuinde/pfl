@@ -21,6 +21,13 @@ class BaseModel(models.Model):
 class Department(BaseModel):
     department = models.CharField(max_length=50, unique=True)
     description=models.TextField(null=True, blank=True)
+    manager = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='managed_department'
+    )
 
     def __str__(self):
         return self.department.department()

@@ -34,6 +34,13 @@ Departments
                         </a>
                     </td>
                     <td>
+                        {% if department.manager %}
+                        {{ department.manager| title  }}
+                        {% else %}
+                        <i>{{ department.description| title |default:"No manager Assigned" }}</i>
+                        {% endif %}
+                    </td>
+                    <td>
                         {% if department.description|length > 20 %}
                         {{ department.description| title | slice:":20"  }}...
                         {% else %}

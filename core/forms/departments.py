@@ -4,7 +4,7 @@ from ..models import Department
 class DepartmentForm(forms.ModelForm):
     class Meta:
         model = Department
-        fields = ['department', 'description']
+        fields = ['department','manager', 'description']
         widgets = {
             'department': forms.TextInput(attrs={
                 'class': 'form-control', 
@@ -16,6 +16,10 @@ class DepartmentForm(forms.ModelForm):
                 'rows': 4, 
                 'placeholder': 'Enter department description (optional)'
             }),
+            
+            'manager': forms.Select(attrs={
+                'class': 'form-control'
+            }),
         }
 
     def clean_department(self):
@@ -23,3 +27,9 @@ class DepartmentForm(forms.ModelForm):
         if not department or department.strip() == "":
             raise forms.ValidationError("Department name cannot be empty.")
         return department
+    
+    def clean_manager(self):
+        manager = self.cleaned_data.get('manager')
+        if manager and Department.objects.filter(manager=manager).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError(f"{manager} is already assigned as a manager to another department.")
+        return manager
