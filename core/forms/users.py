@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
-
+from ..models import CustomUser
 from django.core.exceptions import ValidationError
 
 User = get_user_model()
@@ -141,7 +141,7 @@ class UserProfileForm(forms.ModelForm):
 
 class CustomUserFullProfileForm(forms.ModelForm):
     class Meta:
-        model = User
+        model = CustomUser
         fields = [
             'first_name', 'last_name', 'email', 'phone', 'payroll', 'role',
             'medical_cert_number', 'medical_cert_generation_date', 'medical_cert_expiry_date',

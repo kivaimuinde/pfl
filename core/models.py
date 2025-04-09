@@ -30,7 +30,7 @@ class Department(BaseModel):
     )
 
     def __str__(self):
-        return self.department.department()
+        return self.department
 
 
 class Plant(BaseModel):
@@ -46,7 +46,7 @@ class Job(BaseModel):
     description=models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return self.job.job()
+        return self.job
 
 
 class CustomUserManager(BaseUserManager):
