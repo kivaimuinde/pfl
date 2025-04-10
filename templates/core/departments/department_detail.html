@@ -13,6 +13,7 @@
             <a href="#" class="btn btn-secondary" onclick="window.history.back();">
                 <i class="bi bi-arrow-left"></i> <span class="d-none d-sm-inline">Back</span>
             </a>
+            {% if user.is_staff %}
             <a href="{% url 'core:department_update' department.pk %}" class="btn btn-warning">
                 <i class="bi bi-pencil"></i> <span class="d-none d-sm-inline">Edit</span>
             </a>
@@ -20,6 +21,7 @@
             <a href="{% url 'core:department_delete' department.pk %}" class="btn btn-danger">
                 <i class="bi bi-trash"></i> <span class="d-none d-sm-inline">Delete</span>
             </a>
+            {% endif %}
         </div>
     </div>
 
