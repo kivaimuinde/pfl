@@ -50,6 +50,7 @@ Departments
                             {% endif %}
                         </td>
                     </span>
+                    {% if user.is_staff %}
                     <td class="d-flex gap-2">
                         <a href="{% url 'core:department_update' department.pk %}" class="btn btn-sm btn-warning">
                             <i class="bi bi-pencil"></i> 
@@ -59,7 +60,8 @@ Departments
                             <i class="bi bi-trash"></i> 
                             <span class="d-none d-sm-inline">Delete</span>
                         </a>
-                    </td>                   
+                    </td>   
+                    {% endif %}                
                 </tr>
                 {% empty %}
                 <tr>
